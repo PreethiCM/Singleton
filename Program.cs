@@ -1,51 +1,31 @@
 ﻿using System;
 
-namespace SingletonExample
+public sealed class Singleton
 {
-    public sealed class Logging
+    private static readonly Singleton instance = new Singleton();
+
+    private Singleton() { }
+
+    public static Singleton Instance
     {
-        private static Logging instance;
-        private static readonly object _lock = new object();
-
-        private Logging()
-        {
-        }
-
-        public static Logging Instance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    lock (_lock)
-                    {
-                        if (instance == null)
-                        {
-                            instance = new Logging();
-                        }
-                    }
-                }
-                return instance;
-            }
-        }
-
-        public void Log(string message)
-        {
-            Console.WriteLine($"Logging: {message}");
-        }
+        get { return instance; }
     }
 
-    class Program
+    public void PrintMessage(string message)
     {
-        static void Main(string[] args)
-        {
-            Logging logger1 = Logging.Instance;
-            logger1.Log("Log message from logger1");
+        Console.WriteLine(message);
+    }
+}
 
-            Logging logger2 = Logging.Instance;
-            logger2.Log("Log message from logger2");
+class Program
+{
+    static void Main(string[] args)
+    {
+        Singleton.Instance.PrintMessage("Hello, Singleton!");
 
-            Console.ReadLine();
-        }
+        Singleton anotherInstance = Singleton.Instance;
+        anotherInstance.PrintMessage("Trying to create another instance...");
+
+        Console.ReadLine();
     }
 }
